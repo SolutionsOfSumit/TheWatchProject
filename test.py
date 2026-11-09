@@ -1,8 +1,10 @@
 import time
 
-number = 0
+deadline = int(input(
+    "Set up your best time for the work in seconds"
+))
 
-while number < 10:
-    print(number)
-    number += 2
-    time.sleep(2)
+while deadline >= 0:
+    print(f"{deadline}seconds left")
+    deadline -= 1
+    time.sleep(1)
