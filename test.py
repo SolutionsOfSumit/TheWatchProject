@@ -1,42 +1,30 @@
+import keyboard 
 import time
-import datetime as dt
 
-# Setting up deadline 
+tik = 10
+is_paused = False
 
+def count_down(count_down):
+    while count_down >= 0:
 
-# hours = int(input("Numbers of hours to setup: "))
-# minuts = int(input("Numbers of Minuts to setup: "))
-# seconds = int(input("Number of Seconds to setup: "))
+        if keyboard.is_pressed('p') and is_paused == False:
+            tik = tik
+            is_paused = True
 
-hours = 11
-minutes = 12
-seconds = 12
-
-
-def print_deadline(hours, minutes, seconds):
-    deadline = dt.datetime(time.localtime().tm_year,time.localtime().tm_mon,time.localtime().tm_mday,hours,minutes,seconds).timetuple()
-    set_deadline = time.strftime('%H:%M:%S', deadline)
-    return set_deadline
-
-
-while True: 
-    if seconds == 0:
-        print_deadline(hours, minutes, seconds)
-        minutes -= 1
-        seconds = 59
+        print(count_down)
+        count_down -= 1
         time.sleep(1)
 
-    if minutes == 0:
-        print_deadline(hours, minutes, seconds)
-        hours -= 1
-        minutes = 59
-        time.sleep(1)
+while tik >= 0 and is_paused == False:
+    count_down(tik)
 
-    if hours == 0 and minutes == 0 and seconds == 0:
-        print("Time is up")
+    if keyboard.is_pressed('p') and is_paused == False:
+        tik = tik
+        is_paused = True
+
+    if keyboard.is_pressed('p') and is_paused == True:
+        count_down(tik)
+
+    if keyboard.is_pressed('s'):
+        print(f"You stopped the countdown at {tik}")
         break
-
-    else:
-        print_deadline(hours, minutes, seconds)
-        seconds -= 1
-        time.sleep(1)
