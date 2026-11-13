@@ -1,30 +1,36 @@
-import keyboard 
+import keyboard
 import time
 
 tik = 10
+restart = tik
+
 is_paused = False
 
-def count_down(count_down):
-    while count_down >= 0:
+print("Press P to pause/resume and S to stop")
 
-        if keyboard.is_pressed('p') and is_paused == False:
-            tik = tik
-            is_paused = True
-
-        print(count_down)
-        count_down -= 1
-        time.sleep(1)
-
-while tik >= 0 and is_paused == False:
-    count_down(tik)
-
-    if keyboard.is_pressed('p') and is_paused == False:
-        tik = tik
-        is_paused = True
-
-    if keyboard.is_pressed('p') and is_paused == True:
-        count_down(tik)
+while tik >= 0:
 
     if keyboard.is_pressed('s'):
-        print(f"You stopped the countdown at {tik}")
+        print(f"Countdown stopped at {tik}")
         break
+    if keyboard.is_pressed('r'):
+        print("Restarting the countdown")
+        tik = restart
+
+    if keyboard.is_pressed('p'):
+        is_paused = not is_paused
+
+        if is_paused:
+            print("Paused")
+        else:
+            print("Resumed")
+
+        keyboard.wait('p')  # Wait until P is released
+
+    if not is_paused:
+        print(tik)
+        tik -= 1
+        time.sleep(1)
+
+
+print("Countdown finished")
