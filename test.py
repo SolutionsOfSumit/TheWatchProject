@@ -5,23 +5,33 @@ tik = 10
 restart = tik
 
 is_paused = False
+is_quit = False
 
 print("Press P to pause/resume and S to stop")
 
-while True:
+while is_quit != True:
 
-    if keyboard.is_pressed('q'):
-                print(f"program quit")
-                break
+    if keyboard.is_pressed('r'):
+        print("Restarting the countdown")
+        tik = restart
+        is_paused = False
 
     while tik >= 0:
+
+        if keyboard.is_pressed('q'):
+            print(f"program quit")
+            is_quit = True
+            break
 
         if keyboard.is_pressed('s'):
             print(f"Countdown stopped at {tik}")
             break
+
         if keyboard.is_pressed('r'):
             print("Restarting the countdown")
             tik = restart
+            is_paused = False
+        
 
         if keyboard.is_pressed('p'):
             is_paused = not is_paused
