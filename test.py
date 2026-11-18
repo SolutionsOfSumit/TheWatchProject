@@ -4,57 +4,89 @@ import time
 tik = 10
 restart = tik
 
-is_paused = False
-is_quit = False
-restart_want = False
-is_stopped = False
+paused = False
+stopped = False
+running = True
+quit = False
 
 print("Press P to pause/resume and S to stop")
 
-while is_quit == False:
+while True:
 
-    if restart_want== True and is_stopped == False:
-        keyboard.wait('r', trigger_on_release=True)
-        restart_want = not restart_want
-        is_stopped = False
+    if quit == True:
+            print("Program quit")
+            break
 
-    if is_quit == True:
-        keyboard.wait('q', trigger_on_release=True)
-        break
-
-    while tik >= 0:
-
+    if paused == True:
         if keyboard.is_pressed('q'):
-            print(f"program quit")
-            is_quit = True
+            quit = True
             break
 
         if keyboard.is_pressed('s'):
-            print(f"Countdown stopped at {tik}")
-            is_stopped = True
+            paused = False
+            stopped = True
+            print("stopped")
+            keyboard.wait('s', trigger_on_release=True)
+        
+        if keyboard.is_pressed('p'):
+            paused = False
+            running = True
+            print("program resumed")
+            keyboard.wait('p', trigger_on_release=True)
+
+    if stopped == True: 
+        if keyboard.is_pressed('q'):
+            quit = True
             break
 
         if keyboard.is_pressed('r'):
-            print("Restarting the countdown")
+            stopped = False
+            running = True
             tik = restart
-            is_paused = False
-            restart_want = True
-            break
-        
+            print("Countdown Restarted")
+            keyboard.wait('r', trigger_on_release=True)
 
-        if keyboard.is_pressed('p'):
-            is_paused = not is_paused
+    if running == True:
+        while tik > 0:
+            if keyboard.is_pressed('p'):
+                tik = tik
+                paused = True
+                running = False
+                print("Countdown paused")
+                keyboard.wait('p', trigger_on_release=True)
+                break
 
-            if is_paused:
-                print("Paused")
-            else:
-                print("Resumed")
+            if keyboard.is_pressed('q'):
+                quit = True
+                break
 
-            keyboard.wait('p')  
+            if keyboard.is_pressed('s'):
+                running= False
+                stopped = True
+                tik = restart
+                print("stopped")
+                keyboard.wait('s', trigger_on_release=True)
+                break
 
-        if not is_paused:
+            if keyboard.is_pressed('r'):
+                tik = restart
+                keyboard.wait('r', trigger_on_release=True)
+                continue
+            
             print(tik)
             tik -= 1
             time.sleep(1)
 
-print("Countdown finished")
+    if tik == 0:
+        print("Countdown finished")
+
+        Further_instructions = int(input("What you want to do 1 for quit and 2 for restart"))
+
+        if Further_instructions == 2:
+            tik = restart
+            continue
+
+        if Further_instructions == 1:
+            break
+
+    
