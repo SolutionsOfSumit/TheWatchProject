@@ -1,17 +1,29 @@
 import time
 import keyboard
 import datetime as dt
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError, AfterValidator
+from typing import Annotated
+
+# Schema functions
+
+def is_hour(value: int):
+    if not 0 <= value <= 23:
+        raise ValidationError("Value is not an valid")
+    return value
+
+def is_min(value: int):
+    if not 0 <= value <= 59:
+        raise ValidationError("Value is not an valid")
+    return value
 
 # Schemas
 
 class DeadLine(BaseModel):
-    year : int = time.localtime().tm_year,
-    month : int = time.localtime().tm_mon,
-    day : int = time.localtime().tm_mday,
-    hour : int = time.localtime().tm_hour,
-    minute : int = time.localtime().tm_min,
-    second : int = time.localtime().tm_sec,
+    hour : Annotated[int, AfterValidator(is_hour)]  = time.localtime().tm_hour
+    minute : Annotated[int, AfterValidator(is_min)]  = time.localtime().tm_min
+    second : Annotated[int, AfterValidator(is_min)]  = time.localtime().tm_sec
+
+    
 
 # Functions 
 
@@ -22,9 +34,8 @@ def get_deadline(hour, minutes, seconds):
         "second" : seconds 
     }
 
-    deadline = DeadLine(**user_data)
+    deadline = DeadLine(**user_data).model_dump()
 
-    print(deadline.model_dump())
+    return deadline
 
-
-get_deadline(5,10,15)
+print(get_deadline(21,21,50))
