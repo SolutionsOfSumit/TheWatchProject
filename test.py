@@ -8,12 +8,13 @@ from typing import Annotated
 
 def is_hour(value: int):
     if not 0 <= value <= 23:
-        raise ValidationError("Value is not an valid")
+        raise ValueError("Value is not an valid")
     return value
 
 def is_min(value: int):
+
     if not 0 <= value <= 59:
-        raise ValidationError("Value is not an valid")
+        raise ValueError("Value is not an valid")
     return value
 
 # Schemas
@@ -33,9 +34,11 @@ def get_deadline(hour, minutes, seconds):
         "minute" : minutes,
         "second" : seconds 
     }
-
-    deadline = DeadLine(**user_data).model_dump()
-
-    return deadline
+    try:
+        deadline = DeadLine(**user_data).model_dump()
+        return deadline
+    except ValueError as e :
+        print(e)
+        
 
 print(get_deadline(21,21,50))
